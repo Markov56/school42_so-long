@@ -6,7 +6,7 @@ OBJS = ${SRC:.c=.o}
 
 CC = cc
 RM = rm -f
-# todo
+# TODO
 # CFLAGS = -Wall -Wextra -Werror
 CFLAGS = 
 INCLUDE = -I include
