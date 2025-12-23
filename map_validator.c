@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   map_validator.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rmarkov <rmarkov@student.42berlin.de>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/23 16:08:29 by rmarkov           #+#    #+#             */
+/*   Updated: 2025/12/23 16:08:32 by rmarkov          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "so_long.h"
 
 static int	is_rectangular(t_map *map)
@@ -11,7 +23,7 @@ static int	is_rectangular(t_map *map)
 	row = 0;
 	while (row < map->height)
 	{
-		if (ft_strlen(map->grid[row]) != expected_width)
+		if ((int)ft_strlen(map->grid[row]) != expected_width)
 			return (0);
 		row++;
 	}
@@ -25,7 +37,6 @@ static int	is_surrounded_by_walls(t_map *map)
 	int	col;
 
 	row = 0;
-
 	while (row < map->height)
 	{
 		if (map->grid[row][0] != WALL || 
@@ -55,31 +66,21 @@ static int	validate_tiles_and_count(t_map *map, t_session *session)
 		col = 0;
 		while (col < map->width)
 		{
-			if (map->grid[row][col] == PLAYER)
-			{
-				map->players++;
-				session->current_pos = (t_position){col, row};
-				session->target_pos = session->current_pos;
-			}
-			else if (map->grid[row][col] == EXIT)
-				map->exits++;
-			else if (map->grid[row][col] == COIN)
-				map->collectibles++;
-			else if (!ft_strchr(VALID_TILES, map->grid[row][col]))
+			if (!ft_strchr(VALID_TILES, map->grid[row][col]))
 				return (0);
+			process_tile(map, session, row, col);
 			col++;
 		}
 		row++;
 	}
-	return (map->players == 1 && map->exits == 1 
-		&& map->collectibles >= 1);
+	return (map->players == 1 && map->exits == 1 && map->collectibles >= 1);
 }
 
 static int	verify_valid_path(t_map *map, t_session *session)
 {
 	char	**temp_grid;
 	int		path_exists;
-	int	row;
+	int		row;
 
 	temp_grid = ft_calloc(map->height + 1, sizeof(char *));
 	if (!temp_grid)
@@ -102,14 +103,14 @@ static int	verify_valid_path(t_map *map, t_session *session)
 
 void	validate_map(t_session *session)
 {
-	if (session->map.height == 0)
+	if (session->map->height == 0)
 		terminate_with_error(session, "Map is empty");
-	if (!is_rectangular(&session->map))
+	if (!is_rectangular(session->map))
 		terminate_with_error(session, "Map must be rectangular");
-	if (!is_surrounded_by_walls(&session->map))
+	if (!is_surrounded_by_walls(session->map))
 		terminate_with_error(session, "Map must be surrounded by walls");
-	if (!validate_tiles_and_count(&session->map, session))
+	if (!validate_tiles_and_count(session->map, session))
 		terminate_with_error(session, "Invalid map tiles or object count");
-	if (!verify_valid_path(&session->map, session))
+	if (!verify_valid_path(session->map, session))
 		terminate_with_error(session, "No valid path to exit");
 }

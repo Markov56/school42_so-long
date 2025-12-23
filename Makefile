@@ -1,24 +1,33 @@
 NAME = so_long
 
-SRC = main.c utils.c map_parser.c map_validator.c
+SRC = main.c \
+		utils.c \
+		map_parser.c \
+		map_validator.c \
+		render.c \
+		free_exit.c \
+		keypress_handler.c
 
 OBJS = ${SRC:.c=.o}
 
 CC = cc
 RM = rm -f
 # TODO
-# CFLAGS = -Wall -Wextra -Werror
-CFLAGS = 
+CFLAGS = -Wall -Wextra -Werror
 INCLUDE = -I include
-LIBFT_PATH = ./libft
+
+LIBFT_PATH = ./libs/libft
 LIBFT = -L ${LIBFT_PATH} -lft
 
-.c.o:
-		${CC} ${CFLAGS} ${INCLUDE} -c $< -o ${<:.c=.o}
+MLX_PATH = ./libs/mlx
+MLX = -L$(MLX_PATH) -lmlx -lXext -lX11 -lm
+
+%.o: %.c
+	${CC} ${CFLAGS} ${INCLUDE} -c $< -o $@
 
 ${NAME}: ${OBJS}
 	${MAKE} -C ${LIBFT_PATH} all
-	${CC} ${CFLAGS} ${INCLUDE} ${OBJS} ${LIBFT} -o ${NAME}
+	${CC} ${CFLAGS} ${INCLUDE} ${OBJS} ${LIBFT} ${MLX} -o ${NAME}
 
 all: ${NAME}
 

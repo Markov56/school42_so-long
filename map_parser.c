@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   map_parser.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rmarkov <rmarkov@student.42berlin.de>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/23 16:08:20 by rmarkov           #+#    #+#             */
+/*   Updated: 2025/12/23 16:08:22 by rmarkov          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "so_long.h"
 
 static char	*read_entire_file(int fd)
@@ -45,6 +57,10 @@ void	parse_map(t_session *session, char *file)
 	char	*content;
 	char	**lines;
 
+	session->map = malloc(sizeof(t_map));
+	if (!session->map)
+		terminate_with_error(session, "Memore allocation failed");
+	ft_bzero(session->map, sizeof(t_map));
 	fd = open(file, O_RDONLY);
 	if (fd == -1)
 		terminate_with_error(session, "Cannot open map file");
@@ -56,6 +72,6 @@ void	parse_map(t_session *session, char *file)
 	free(content);
 	if (!lines)
 		terminate_with_error(session, "Failed to parse map");
-	session->map.grid = lines;
-	session->map.height = count_lines(lines);
+	session->map->grid = lines;
+	session->map->height = count_lines(lines);
 }
