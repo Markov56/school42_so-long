@@ -54,7 +54,7 @@ void	render_tile(t_session *session, t_position p)
 		texture = session->textures[TEX_COIN];
 	else if (session->map->grid[p.y][p.x] == EXIT)
 		texture = session->textures[TEX_EXIT];
-	mlx_put_image_to_window(session->display.mlx, session->display.window, \
+	mlx_put_image_to_window(session->display.mlx, session->display.window,
 		texture.image, texture.width * p.x, texture.height * p.y);
 }
 

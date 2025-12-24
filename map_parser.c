@@ -50,7 +50,6 @@ static int	count_lines(char **lines)
 	return (count);
 }
 
-// TODO check with different files. mb get_next_line is needed
 void	parse_map(t_session *session, char *file)
 {
 	int		fd;

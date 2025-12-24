@@ -32,7 +32,6 @@ int	terminate_with_error(t_session *session, char *message)
 	exit(1);
 }
 
-// TODO might be problems with static variables
 int	flood_fill_check(t_map *map, t_position pos, char **temp_grid)
 {
 	static int	coins_found = 0;
